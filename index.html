@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For You ✨</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
@@ -12,21 +17,44 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
             padding: 20px;
             color: #333;
+            overflow-x: hidden;
+            position: relative;
         }
+
+        /* Floating Hearts Animation Background */
+        .heart {
+            position: absolute;
+            color: rgba(214, 51, 132, 0.3);
+            font-size: 20px;
+            animation: float 6s infinite linear;
+            bottom: -10%;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Main Card */
         .card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.92);
             padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            max-width: 400px;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+            max-width: 420px;
+            width: 100%;
             text-align: center;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px);
+            z-index: 10;
+            position: relative;
         }
-        h1 { color: #d63384; margin-bottom: 10px; }
-        p { font-size: 1.1em; line-height: 1.5; color: #555; }
+
+        h1 { color: #d63384; margin-bottom: 10px; font-size: 1.8rem; }
+        p { font-size: 1.05em; line-height: 1.5; color: #555; margin-bottom: 15px; }
+
         .btn {
             background-color: #d63384;
             color: white;
@@ -34,42 +62,119 @@
             padding: 12px 24px;
             border-radius: 25px;
             font-size: 1em;
+            font-weight: bold;
             cursor: pointer;
-            margin-top: 15px;
-            transition: transform 0.2s, background-color 0.2s;
+            margin-top: 10px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(214, 51, 132, 0.3);
         }
+
         .btn:hover {
             background-color: #b8256f;
-            transform: scale(1.05);
+            transform: translateY(-2deg) scale(1.03);
         }
+
+        /* Status Message Box */
         #message {
             display: none;
             margin-top: 20px;
             padding: 15px;
             background: #ffe6ed;
-            border-radius: 12px;
+            border-radius: 16px;
             color: #b8256f;
+            font-weight: 600;
+            animation: fadeIn 0.4s ease-in;
+        }
+
+        /* Interactive Date Request Section */
+        .date-section {
+            display: none;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px dashed #fecfef;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-yes { background-color: #28a745; }
+        .btn-yes:hover { background-color: #218838; }
+
+        #response {
+            margin-top: 12px;
             font-weight: bold;
+            color: #28a745;
+        }
+
+        /* Spotify Widget */
+        .spotify-container {
+            margin-top: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
+    <!-- Floating Background Hearts -->
+    <div class="heart" style="left: 10%; animation-duration: 7s;">💖</div>
+    <div class="heart" style="left: 30%; animation-duration: 5s;">✨</div>
+    <div class="heart" style="left: 50%; animation-duration: 8s;">🌸</div>
+    <div class="heart" style="left: 70%; animation-duration: 6s;">💖</div>
+    <div class="heart" style="left: 90%; animation-duration: 9s;">✨</div>
+
     <div class="card">
         <h1>Hi there! 👋</h1>
-        <p>Welcome to your official evaluation page. Press the button below to see your status.</p>
+        <p>Welcome to your official evaluation page. Press the button below to check your status.</p>
         
         <button class="btn" onclick="showMessage()">Check Status</button>
 
         <div id="message">
             Application Status: Pending... but you're currently in 1st place! 😉
         </div>
+
+        <!-- Date Request Interactive Section -->
+        <div class="date-section" id="dateSection">
+            <p><strong>Free ka ba for coffee / food trip soon? ☕🍕</strong></p>
+            <div class="btn-group">
+                <button class="btn btn-yes" onclick="answer('G! Set the date! 🎉')">G! (Yes)</button>
+                <button class="btn btn-yes" onclick="answer('Pass muna, pero study date pwede! 📖')">Study Date lang 😅</button>
+            </div>
+            <p id="response"></p>
+        </div>
+
+        <!-- Embedded Spotify Player -->
+        <div class="spotify-container">
+            <iframe style="border-radius:12px" 
+                src="https://open.spotify.com/embed/track/3ee8J11KaG6eL224v1R92M?utm_source=generator" 
+                width="100%" 
+                height="152" 
+                frameBorder="0" 
+                allowfullscreen="" 
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                loading="lazy">
+            </iframe>
+        </div>
     </div>
 
     <script>
         function showMessage() {
-            var msg = document.getElementById("message");
-            msg.style.display = "block";
+            document.getElementById("message").style.display = "block";
+            document.getElementById("dateSection").style.display = "block";
+        }
+
+        function answer(msg) {
+            document.getElementById("response").innerText = "You selected: " + msg;
         }
     </script>
 
